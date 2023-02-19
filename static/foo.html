@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script>
+  async function test() {
+    try {
+      const input = document.querySelector("#file");
+      const statusDiv = document.querySelector("#status");
+      if (!input.files.length) {
+        statusDiv.innerHTML = 'please select a file'
+        return;
+      }
+
+      const form = new FormData();
+
+      form.append("file", input.files[0]);
+
+      statusDiv.innerHTML = 'SENDING REQUEST'
+      try {
+        const res1 = await fetch("/foo", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+          },
+          body: form,
+        });
+        console.log(await res1.json())
+        statusDiv.innerHTML = 'REQUEST SENT'
+      } catch (error) {
+        statusDiv.innerHTML = 'TIMEOUT'
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+</script>
+<input id="file" type="file" />
+<div id="status"></div>
+<button onclick="test()">test</button>
+</body>
+</html>
